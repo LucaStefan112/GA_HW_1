@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
+#include <bits/stdc++.h>
 #include "Functions.h"
+
 
 #define T_MAX 10000
 #define TEMPERATURE 5000
@@ -74,11 +76,9 @@ std::vector<int> selectNeighbour(std::vector<int> candidate){
   return candidate;
 }
 
-void showStats(int iteration, std::vector<int> best, std::vector<int> localBest){
+void showStats(std::vector<int> best){
   clearConsole();
-  std::cout << "Iteration/Temperature: " << iteration << '\n';
   std::cout << "Best overall score: f(x) = " << thisFunction.getResult(best) << '\n';
-  std::cout << "Best local score: f(x) = " << thisFunction.getResult(localBest) << '\n';
 }
 
 void hillCLimbing(){
@@ -100,9 +100,9 @@ void hillCLimbing(){
 
     if(thisFunction.getResult(candidate) < thisFunction.getResult(best))
       best = candidate;
-    if(t % 50 == 0)
-      showStats(t, best, candidate);
   }
+
+  showStats(best);
 }
 
 void simulatedAnnealing(){
@@ -120,13 +120,12 @@ void simulatedAnnealing(){
       if(neighbourScore < bestScore)
         best = neighbour;
 
-      else if (float(random() % Functions::decimalPrecision) / Functions::decimalPrecision < exp(-abs(bestScore - neighbourScore) * 500 / t))
+      else if (float(rand() % Functions::decimalPrecision) / Functions::decimalPrecision < exp(-abs(bestScore - neighbourScore) * 2000 / t))
         best = neighbour;
     }
-    if(int(t) % 5 == 0)
-      showStats(t, best, neighbour);
     t -= 5;
   }
+  showStats(best);
 }
 
 void computeAlgorithm(){
@@ -137,11 +136,21 @@ void computeAlgorithm(){
 }
 
 int main(){
+  clock_t start, end;
+  start = clock();
+
   srand(time(0));
   
   readData();
 
   computeAlgorithm();
+
+  end = clock();
+
+  double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+  std::cout << "\n" << time_taken << " seconds";
+
+  system("pause");
 
   return 0;
 }
