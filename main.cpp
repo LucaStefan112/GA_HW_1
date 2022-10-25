@@ -1,5 +1,3 @@
-#include <iostream>
-#include <string>
 #include <bits/stdc++.h>
 #include "Functions.h"
 
@@ -77,7 +75,7 @@ std::vector<int> selectNeighbour(std::vector<int> candidate){
 }
 
 void showStats(std::vector<int> best){
-  clearConsole();
+  //clearConsole();
   std::cout << "Best overall score: f(x) = " << thisFunction.getResult(best) << '\n';
 }
 
@@ -111,8 +109,8 @@ void simulatedAnnealing(){
   int iteration;
 
   while(t > 0){
-    for(iteration = 0; iteration < T_MAX; iteration++){
-      neighbour = thisFunction.generateRandomNeighbour(best);
+    for(iteration = 0; iteration < T_MAX / 20; iteration++){
+      neighbour = thisFunction.generateBestNeighbour(best);
 
       float neighbourScore = thisFunction.getResult(neighbour),
             bestScore = thisFunction.getResult(best);
@@ -135,6 +133,44 @@ void computeAlgorithm(){
     hillCLimbing();
 }
 
+void algorithmData(clock_t start, clock_t end){
+  double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+  std::cout << "Time: " << time_taken << " seconds\n";
+  std::cout << "Function Type: ";
+  switch (functionType){
+    case 0:
+      std::cout << "De Jong's Function 1";
+    break;
+    case 1:
+      std::cout << "Schwefel's Function 7";
+    break;
+    case 2:
+      std::cout << "Rastrigin's Function 6";
+    break;
+    case 3:
+      std::cout << "Michalewicz's Function 12";
+    break;
+  }
+  std::cout << '\n';
+  std::cout << "Dimension: " << dimension << '\n';
+  std::cout << "Algorythm type: ";
+  switch (algorithmType){
+    case 0:
+      std::cout << "HC-FI";
+    break;
+    case 1:
+      std::cout << "HC-BI";
+    break;
+    case 2:
+      std::cout << "HC-WI";
+    break;
+    case 3:
+      std::cout << "SA-BI";
+    break;
+  }
+  std::cout << '\n';
+}
+
 int main(){
   clock_t start, end;
   start = clock();
@@ -147,8 +183,7 @@ int main(){
 
   end = clock();
 
-  double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-  std::cout << "\n" << time_taken << " seconds";
+  algorithmData(start, end);
 
   system("pause");
 
